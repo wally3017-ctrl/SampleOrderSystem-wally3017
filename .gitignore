@@ -2,3 +2,10 @@
 *.user
 bin/
 obj/
+x64/
+x86/
+Debug/
+Release/
+*.VC.db
+*.VC.opendb
+SampleOr.*/
