@@ -159,6 +159,7 @@
     <ClCompile Include="Release\ReleaseControllerTest.cpp" />
     <ClCompile Include="..\Controller\ReleaseController.cpp" />
     <ClCompile Include="..\View\ReleaseView.cpp" />
+    <ClCompile Include="Integration\IntegrationTest.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>
