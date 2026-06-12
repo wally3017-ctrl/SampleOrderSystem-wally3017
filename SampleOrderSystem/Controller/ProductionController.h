@@ -19,5 +19,6 @@ public:
                          ProductionView&      view);
 
     void Complete();
+    void AutoComplete();
     void Run() override;
 };

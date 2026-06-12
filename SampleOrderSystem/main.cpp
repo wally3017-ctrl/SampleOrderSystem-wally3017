@@ -48,6 +48,7 @@ int main() {
 
     std::string input;
     while (true) {
+        productionCtrl.AutoComplete();
         menuView.Show();
         input = console.ReadLine();
         if (input == "0") {

@@ -56,6 +56,13 @@ void ProductionView::ShowCompleted(const ProductionJob& job) {
     console_.PrintLine(" 해당 주문이 CONFIRMED 상태로 전환되었습니다.");
 }
 
+void ProductionView::ShowAutoCompleted(const ProductionJob& job) {
+    console_.PrintLine(" [자동 완료] " + job.GetOrderId()
+        + " (시료:" + job.GetSampleId()
+        + "  실 생산량:" + std::to_string(job.GetActualQty()) + "ea)"
+        + " → CONFIRMED 전환");
+}
+
 void ProductionView::ShowEmptyQueue() {
     console_.PrintLine(" 현재 생산 대기 중인 작업이 없습니다.");
 }
