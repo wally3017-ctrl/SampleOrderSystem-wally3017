@@ -136,16 +136,44 @@ TEST(OrderControllerTest, ApproveOrder_SufficientStock_ChangesToConfirmed) {
         .WillOnce(Return(std::optional<Order>(order)));
     EXPECT_CALL(mockSampleRepo, Load("S001"))
         .WillOnce(Return(std::optional<Sample>(sample)));
+    EXPECT_CALL(mockOrderRepo,  LoadAll())
+        .WillOnce(Return(std::vector<Order>{}));
 
-    Order  capturedOrder;
-    Sample capturedSample;
-    EXPECT_CALL(mockSampleRepo, Update(_)).WillOnce(SaveArg<0>(&capturedSample));
-    EXPECT_CALL(mockOrderRepo,  Update(_)).WillOnce(SaveArg<0>(&capturedOrder));
+    Order capturedOrder;
+    EXPECT_CALL(mockOrderRepo, Update(_)).WillOnce(SaveArg<0>(&capturedOrder));
 
     EXPECT_NO_THROW(controller.Approve("ORD-20260612-0001"));
 
-    EXPECT_EQ(capturedOrder.GetStatus(),  OrderStatus::CONFIRMED);
-    EXPECT_EQ(capturedSample.GetStock(),  90);
+    EXPECT_EQ(capturedOrder.GetStatus(), OrderStatus::CONFIRMED);
+}
+
+TEST(OrderControllerTest, ApproveOrder_ConfirmedOrdersReduceAvailableStock_GoesToProducing) {
+    OrderTestFixture f;
+    MockOrderRepository  mockOrderRepo;
+    MockSampleRepository mockSampleRepo;
+    MockProductionQueue  mockQueue;
+    OrderController controller(mockOrderRepo, mockSampleRepo, mockQueue, f.view);
+
+    // 물리 재고 15개, 이미 CONFIRMED 주문 10개 → 가용 재고 5개
+    // 신규 주문 10개 → 가용 부족 → PRODUCING
+    Sample sample("S001", "GaN", 10, 0.9, 15);
+    Order  newOrder("ORD-20260612-0002", "S001", "고객B", 10, OrderStatus::RESERVED, "2026-06-12 10:00:00");
+    Order  existingConfirmed("ORD-20260612-0001", "S001", "고객A", 10, OrderStatus::CONFIRMED, "2026-06-12 09:00:00");
+
+    EXPECT_CALL(mockOrderRepo, Load("ORD-20260612-0002"))
+        .WillOnce(Return(std::optional<Order>(newOrder)));
+    EXPECT_CALL(mockSampleRepo, Load("S001"))
+        .WillOnce(Return(std::optional<Sample>(sample)));
+    EXPECT_CALL(mockOrderRepo, LoadAll())
+        .WillOnce(Return(std::vector<Order>{ existingConfirmed }));
+    EXPECT_CALL(mockQueue, Enqueue(_));
+
+    Order capturedOrder;
+    EXPECT_CALL(mockOrderRepo, Update(_)).WillOnce(SaveArg<0>(&capturedOrder));
+
+    controller.Approve("ORD-20260612-0002");
+
+    EXPECT_EQ(capturedOrder.GetStatus(), OrderStatus::PRODUCING);
 }
 
 TEST(OrderControllerTest, ApproveOrder_InsufficientStock_ChangesToProducing) {
@@ -162,6 +190,8 @@ TEST(OrderControllerTest, ApproveOrder_InsufficientStock_ChangesToProducing) {
         .WillOnce(Return(std::optional<Order>(order)));
     EXPECT_CALL(mockSampleRepo, Load("S001"))
         .WillOnce(Return(std::optional<Sample>(sample)));
+    EXPECT_CALL(mockOrderRepo,  LoadAll())
+        .WillOnce(Return(std::vector<Order>{}));
     EXPECT_CALL(mockQueue, Enqueue(_));
 
     Order capturedOrder;
@@ -186,6 +216,8 @@ TEST(OrderControllerTest, ApproveOrder_InsufficientStock_RegistersProductionJob)
         .WillOnce(Return(std::optional<Order>(order)));
     EXPECT_CALL(mockSampleRepo, Load("S001"))
         .WillOnce(Return(std::optional<Sample>(sample)));
+    EXPECT_CALL(mockOrderRepo,  LoadAll())
+        .WillOnce(Return(std::vector<Order>{}));
     EXPECT_CALL(mockOrderRepo,  Update(_));
 
     ProductionJob enqueuedJob;

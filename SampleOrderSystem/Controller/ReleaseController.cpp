@@ -1,8 +1,10 @@
 #include "ReleaseController.h"
 #include <stdexcept>
 
-ReleaseController::ReleaseController(IRepository<Order>& orderRepo, ReleaseView& view)
-    : orderRepo_(orderRepo), view_(view)
+ReleaseController::ReleaseController(IRepository<Order>&  orderRepo,
+                                     IRepository<Sample>& sampleRepo,
+                                     ReleaseView&         view)
+    : orderRepo_(orderRepo), sampleRepo_(sampleRepo), view_(view)
 {}
 
 void ReleaseController::Release(const std::string& orderId) {
@@ -16,6 +18,13 @@ void ReleaseController::Release(const std::string& orderId) {
 
     order.SetStatus(OrderStatus::RELEASED);
     orderRepo_.Update(order);
+
+    auto sampleOpt = sampleRepo_.Load(order.GetSampleId());
+    if (sampleOpt.has_value()) {
+        Sample sample = sampleOpt.value();
+        sample.SetStock(sample.GetStock() - order.GetQuantity());
+        sampleRepo_.Update(sample);
+    }
 }
 
 std::vector<Order> ReleaseController::GetReleasableOrders() const {

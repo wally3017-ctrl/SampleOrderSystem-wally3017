@@ -41,7 +41,7 @@ int main() {
 
     MonitoringService    monitoringSvc(orderRepo, sampleRepo);
     MonitoringController monitorCtrl(monitoringSvc, monitoringView);
-    ReleaseController    releaseCtrl(orderRepo, releaseView);
+    ReleaseController    releaseCtrl(orderRepo, sampleRepo, releaseView);
 
     MainMenuView   menuView(console);
     MainController mainCtrl(&sampleCtrl, &orderCtrl, console);

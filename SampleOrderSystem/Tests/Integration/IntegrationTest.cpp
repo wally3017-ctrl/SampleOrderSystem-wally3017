@@ -26,7 +26,7 @@ struct IntegrationFixture {
 
     OrderController      orderCtrl{ orderRepo, sampleRepo, queue, orderView };
     ProductionController productionCtrl{ queue, orderRepo, sampleRepo, productionView };
-    ReleaseController    releaseCtrl{ orderRepo, releaseView };
+    ReleaseController    releaseCtrl{ orderRepo, sampleRepo, releaseView };
     MonitoringService    monitoringSvc{ orderRepo, sampleRepo };
 };
 
@@ -45,15 +45,20 @@ TEST(IntegrationTest, Scenario_OrderToRelease_SufficientStock_FullFlow) {
     ASSERT_TRUE(approved.has_value());
     EXPECT_EQ(approved->GetStatus(), OrderStatus::CONFIRMED);
 
-    // 재고 50 차감 확인
-    auto sample = f.sampleRepo.Load("S001");
-    ASSERT_TRUE(sample.has_value());
-    EXPECT_EQ(sample->GetStock(), 50);
+    // 승인 후 물리 재고는 변동 없음
+    auto sampleAfterApprove = f.sampleRepo.Load("S001");
+    ASSERT_TRUE(sampleAfterApprove.has_value());
+    EXPECT_EQ(sampleAfterApprove->GetStock(), 100);
 
     f.releaseCtrl.Release(order.GetId());
     auto released = f.orderRepo.Load(order.GetId());
     ASSERT_TRUE(released.has_value());
     EXPECT_EQ(released->GetStatus(), OrderStatus::RELEASED);
+
+    // 출고 후 재고 차감 확인
+    auto sampleAfterRelease = f.sampleRepo.Load("S001");
+    ASSERT_TRUE(sampleAfterRelease.has_value());
+    EXPECT_EQ(sampleAfterRelease->GetStock(), 50);
 }
 
 TEST(IntegrationTest, Scenario_OrderToRelease_InsufficientStock_FullFlow) {
