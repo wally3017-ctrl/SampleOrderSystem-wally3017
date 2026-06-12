@@ -1,6 +1,31 @@
 #include "SampleView.h"
 #include <stdexcept>
 
+namespace {
+    constexpr int COL_ID        = 10;
+    constexpr int COL_NAME      = 18;
+    constexpr int COL_TIME      =  6;
+    constexpr int COL_YIELD_PAD =  4;
+    constexpr int TABLE_WIDTH   = 57;
+
+    std::string pad(int width, int used) {
+        return std::string(std::max(1, width - used), ' ');
+    }
+
+    std::string FormatSampleRow(const Sample& s) {
+        std::string timeStr = std::to_string(s.GetAvgProductionTime());
+        return " " + s.GetId()
+            + pad(COL_ID,   (int)s.GetId().size())
+            + s.GetName()
+            + pad(COL_NAME, (int)s.GetName().size())
+            + timeStr + "min"
+            + pad(COL_TIME, (int)timeStr.size())
+            + std::to_string(static_cast<int>(s.GetYield() * 100)) + "%"
+            + std::string(COL_YIELD_PAD, ' ')
+            + std::to_string(s.GetStock()) + "개";
+    }
+}
+
 SampleView::SampleView(ConsoleView& console) : console_(console) {}
 
 void SampleView::ShowMenu() {
@@ -15,29 +40,21 @@ void SampleView::ShowMenu() {
     console_.Print(" 메뉴 선택 >> ");
 }
 
+static void PrintSampleTable(ConsoleView& console, const std::vector<Sample>& samples) {
+    console.PrintLine(" ID        이름              생산시간  수율    재고");
+    console.PrintLine(" " + std::string(TABLE_WIDTH, '-'));
+    for (const auto& s : samples)
+        console.PrintLine(FormatSampleRow(s));
+}
+
 void SampleView::ShowList(const std::vector<Sample>& samples) {
     console_.PrintSeparator();
     console_.PrintLine(" [시료 목록]");
     console_.PrintSeparator();
-    if (samples.empty()) {
+    if (samples.empty())
         console_.PrintLine(" 등록된 시료가 없습니다.");
-    } else {
-        console_.PrintLine(" ID        이름              생산시간  수율    재고");
-        console_.PrintLine(" " + std::string(57, '-'));
-        for (const auto& s : samples) {
-            std::string row =
-                " " + s.GetId() +
-                std::string(std::max(1, 10 - (int)s.GetId().size()), ' ') +
-                s.GetName() +
-                std::string(std::max(1, 18 - (int)s.GetName().size()), ' ') +
-                std::to_string(s.GetAvgProductionTime()) + "min" +
-                std::string(std::max(1, 6 - (int)std::to_string(s.GetAvgProductionTime()).size()), ' ') +
-                std::to_string(static_cast<int>(s.GetYield() * 100)) + "%" +
-                std::string(4, ' ') +
-                std::to_string(s.GetStock()) + "개";
-            console_.PrintLine(row);
-        }
-    }
+    else
+        PrintSampleTable(console_, samples);
     console_.PrintSeparator();
 }
 
@@ -45,12 +62,10 @@ void SampleView::ShowSearchResult(const std::vector<Sample>& samples, const std:
     console_.PrintSeparator();
     console_.PrintLine(" [검색 결과] 키워드: " + keyword);
     console_.PrintSeparator();
-    if (samples.empty()) {
+    if (samples.empty())
         console_.PrintLine(" 검색 결과가 없습니다.");
-    } else {
-        ShowList(samples);
-        return;
-    }
+    else
+        PrintSampleTable(console_, samples);
     console_.PrintSeparator();
 }
 

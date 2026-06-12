@@ -27,6 +27,13 @@ public:
 
     void SetStock(int stock) { stock_ = stock; }
 
+    void Validate() const {
+        if (yield_ <= 0.0 || yield_ > 1.0)
+            throw std::invalid_argument("수율은 0 초과 1 이하여야 합니다.");
+        if (avgProductionTime_ <= 0)
+            throw std::invalid_argument("평균 생산시간은 양수여야 합니다.");
+    }
+
     bool operator==(const Sample& o) const {
         return id_ == o.id_ && name_ == o.name_
             && avgProductionTime_ == o.avgProductionTime_
