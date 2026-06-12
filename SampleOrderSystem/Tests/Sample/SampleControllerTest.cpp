@@ -9,7 +9,8 @@ using ::testing::_;
 
 using MockSampleRepository = MockRepository<Sample>;
 
-// Phase 2-1 [Red]: SampleController::Register 미구현 - 모두 실패 상태
+// Phase 2-1 [Red] → 2-2 [Green]: Register 구현 완료
+// Phase 2-3 [Red]: GetAll / Search 미구현 - 하단 테스트 실패 상태
 
 TEST(SampleControllerTest, RegisterSample_ValidInput_SavesSuccessfully) {
     MockSampleRepository mockRepo;
@@ -57,4 +58,78 @@ TEST(SampleControllerTest, RegisterSample_NegativeProductionTime_ThrowsException
     Sample sample("S004", "NegTime", -1, 0.9);
 
     EXPECT_THROW(controller.Register(sample), std::invalid_argument);
+}
+
+TEST(SampleControllerTest, GetAllSamples_EmptyRepository_ReturnsEmptyList) {
+    MockSampleRepository mockRepo;
+    SampleController controller(mockRepo);
+
+    EXPECT_CALL(mockRepo, LoadAll())
+        .WillOnce(Return(std::vector<Sample>{}));
+
+    auto result = controller.GetAll();
+    EXPECT_TRUE(result.empty());
+}
+
+TEST(SampleControllerTest, GetAllSamples_MultipleSamples_ReturnsAllWithStock) {
+    MockSampleRepository mockRepo;
+    SampleController controller(mockRepo);
+    std::vector<Sample> samples{
+        {"S001", "SampleA", 10, 0.9, 100},
+        {"S002", "SampleB",  5, 0.8,  50},
+    };
+
+    EXPECT_CALL(mockRepo, LoadAll())
+        .WillOnce(Return(samples));
+
+    auto result = controller.GetAll();
+    EXPECT_EQ(result.size(), 2u);
+    EXPECT_EQ(result[0].GetStock(), 100);
+    EXPECT_EQ(result[1].GetStock(),  50);
+}
+
+TEST(SampleControllerTest, SearchSample_ExactName_ReturnsMatch) {
+    MockSampleRepository mockRepo;
+    SampleController controller(mockRepo);
+    std::vector<Sample> samples{
+        {"S001", "GaN",  10, 0.9, 100},
+        {"S002", "SiC",   5, 0.8,  50},
+    };
+
+    EXPECT_CALL(mockRepo, LoadAll())
+        .WillOnce(Return(samples));
+
+    auto result = controller.Search("GaN");
+    ASSERT_EQ(result.size(), 1u);
+    EXPECT_EQ(result[0].GetName(), "GaN");
+}
+
+TEST(SampleControllerTest, SearchSample_PartialName_ReturnsMatches) {
+    MockSampleRepository mockRepo;
+    SampleController controller(mockRepo);
+    std::vector<Sample> samples{
+        {"S001", "GaN-001", 10, 0.9, 100},
+        {"S002", "GaN-002",  5, 0.8,  50},
+        {"S003", "SiC-001",  8, 0.7,  30},
+    };
+
+    EXPECT_CALL(mockRepo, LoadAll())
+        .WillOnce(Return(samples));
+
+    auto result = controller.Search("GaN");
+    EXPECT_EQ(result.size(), 2u);
+}
+
+TEST(SampleControllerTest, SearchSample_NoMatch_ReturnsEmptyList) {
+    MockSampleRepository mockRepo;
+    SampleController controller(mockRepo);
+    std::vector<Sample> samples{
+        {"S001", "GaN", 10, 0.9, 100},
+    };
+
+    EXPECT_CALL(mockRepo, LoadAll())
+        .WillOnce(Return(samples));
+
+    auto result = controller.Search("SiC");
+    EXPECT_TRUE(result.empty());
 }
