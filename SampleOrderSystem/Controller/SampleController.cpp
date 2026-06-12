@@ -1,8 +1,10 @@
 #include "SampleController.h"
+#include "MenuKey.h"
+#include <algorithm>
 #include <stdexcept>
 
-SampleController::SampleController(IRepository<Sample>& repo)
-    : repo_(repo)
+SampleController::SampleController(IRepository<Sample>& repo, SampleView& view)
+    : repo_(repo), view_(view)
 {}
 
 void SampleController::Register(const Sample& sample) {
@@ -15,6 +17,44 @@ void SampleController::Register(const Sample& sample) {
     repo_.Save(sample);
 }
 
+std::vector<Sample> SampleController::GetAll() const {
+    return repo_.LoadAll();
+}
+
+std::vector<Sample> SampleController::Search(const std::string& keyword) const {
+    auto all = repo_.LoadAll();
+    std::vector<Sample> result;
+    for (const auto& s : all) {
+        if (s.GetName().find(keyword) != std::string::npos)
+            result.push_back(s);
+    }
+    return result;
+}
+
 void SampleController::Run() {
-    // Phase 2-4에서 구현
+    std::string input;
+    while (true) {
+        view_.ShowMenu();
+        input = view_.ReadInput();
+        if (input == MenuKey::EXIT) break;
+
+        if (input == "1") {
+            try {
+                std::string id   = view_.ReadId();
+                std::string name = view_.ReadName();
+                int    time  = view_.ReadAvgProductionTime();
+                double yield = view_.ReadYield();
+                Sample s(id, name, time, yield);
+                Register(s);
+                view_.ShowRegistered(s);
+            } catch (const std::invalid_argument& e) {
+                view_.ShowError(e.what());
+            }
+        } else if (input == "2") {
+            view_.ShowList(GetAll());
+        } else if (input == "3") {
+            std::string keyword = view_.ReadSearchKeyword();
+            view_.ShowSearchResult(Search(keyword), keyword);
+        }
+    }
 }

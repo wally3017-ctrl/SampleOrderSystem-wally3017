@@ -2,14 +2,16 @@
 #include "IMenuController.h"
 #include "../Model/Sample.h"
 #include "../Repository/IRepository.h"
+#include "../View/SampleView.h"
 #include <string>
 #include <vector>
 
 class SampleController : public IMenuController {
     IRepository<Sample>& repo_;
+    SampleView&          view_;
 
 public:
-    explicit SampleController(IRepository<Sample>& repo);
+    SampleController(IRepository<Sample>& repo, SampleView& view);
 
     void Register(const Sample& sample);
     std::vector<Sample> GetAll() const;
