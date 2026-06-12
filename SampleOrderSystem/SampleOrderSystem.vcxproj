@@ -158,6 +158,8 @@
     <ClCompile Include="Controller\MonitoringService.cpp" />
     <ClCompile Include="Controller\MonitoringController.cpp" />
     <ClCompile Include="View\MonitoringView.cpp" />
+    <ClCompile Include="Controller\ReleaseController.cpp" />
+    <ClCompile Include="View\ReleaseView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\Order.h" />
