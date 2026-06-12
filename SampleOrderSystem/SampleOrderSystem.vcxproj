@@ -143,8 +143,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Controller\MainController.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controller\IMenuController.h" />
+    <ClInclude Include="Controller\MainController.h" />
     <ClInclude Include="Repository\IRepository.h" />
     <ClInclude Include="Repository\JsonRepository.h" />
     <ClInclude Include="Repository\MockRepository.h" />

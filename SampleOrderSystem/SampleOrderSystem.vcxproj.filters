@@ -21,8 +21,17 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Controller\MainController.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Controller\IMenuController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\MainController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Repository\IRepository.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
