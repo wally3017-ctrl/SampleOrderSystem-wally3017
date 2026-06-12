@@ -144,20 +144,30 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Controller\MainController.cpp" />
+    <ClCompile Include="Controller\OrderController.cpp" />
+    <ClCompile Include="Controller\OrderNumberGenerator.cpp" />
     <ClCompile Include="Controller\SampleController.cpp" />
     <ClCompile Include="View\ConsoleView.cpp" />
     <ClCompile Include="View\MainMenuView.cpp" />
+    <ClCompile Include="View\OrderView.cpp" />
     <ClCompile Include="View\SampleView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Model\Order.h" />
+    <ClInclude Include="Model\OrderStatus.h" />
     <ClInclude Include="Model\Sample.h" />
     <ClInclude Include="Controller\IMenuController.h" />
     <ClInclude Include="Controller\MenuKey.h" />
+    <ClInclude Include="Controller\OrderController.h" />
+    <ClInclude Include="Controller\OrderNumberGenerator.h" />
     <ClInclude Include="Controller\SampleController.h" />
     <ClInclude Include="View\ConsoleView.h" />
     <ClInclude Include="View\MainMenuView.h" />
+    <ClInclude Include="View\OrderView.h" />
     <ClInclude Include="View\SampleView.h" />
     <ClInclude Include="Controller\MainController.h" />
+    <ClInclude Include="Production\IProductionQueue.h" />
+    <ClInclude Include="Production\ProductionQueue.h" />
     <ClInclude Include="Repository\IRepository.h" />
     <ClInclude Include="Repository\Persistable.h" />
     <ClInclude Include="Repository\JsonRepository.h" />
