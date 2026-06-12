@@ -144,14 +144,19 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Controller\MainController.cpp" />
+    <ClCompile Include="Controller\SampleController.cpp" />
     <ClCompile Include="View\ConsoleView.cpp" />
     <ClCompile Include="View\MainMenuView.cpp" />
+    <ClCompile Include="View\SampleView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Model\Sample.h" />
     <ClInclude Include="Controller\IMenuController.h" />
     <ClInclude Include="Controller\MenuKey.h" />
+    <ClInclude Include="Controller\SampleController.h" />
     <ClInclude Include="View\ConsoleView.h" />
     <ClInclude Include="View\MainMenuView.h" />
+    <ClInclude Include="View\SampleView.h" />
     <ClInclude Include="Controller\MainController.h" />
     <ClInclude Include="Repository\IRepository.h" />
     <ClInclude Include="Repository\Persistable.h" />
