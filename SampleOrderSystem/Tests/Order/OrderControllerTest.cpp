@@ -17,7 +17,10 @@ using MockSampleRepository = MockRepository<Sample>;
 
 class MockProductionQueue : public IProductionQueue {
 public:
-    MOCK_METHOD(void, Enqueue, (const Order& order), (override));
+    MOCK_METHOD(void, Enqueue, (const ProductionJob& job), (override));
+    MOCK_METHOD(std::optional<ProductionJob>, Dequeue, (), (override));
+    MOCK_METHOD(std::optional<ProductionJob>, Peek, (), (const, override));
+    MOCK_METHOD(std::vector<ProductionJob>, GetQueue, (), (const, override));
 };
 
 struct OrderTestFixture {
@@ -185,12 +188,13 @@ TEST(OrderControllerTest, ApproveOrder_InsufficientStock_RegistersProductionJob)
         .WillOnce(Return(std::optional<Sample>(sample)));
     EXPECT_CALL(mockOrderRepo,  Update(_));
 
-    Order enqueuedOrder;
-    EXPECT_CALL(mockQueue, Enqueue(_)).WillOnce(SaveArg<0>(&enqueuedOrder));
+    ProductionJob enqueuedJob;
+    EXPECT_CALL(mockQueue, Enqueue(_)).WillOnce(SaveArg<0>(&enqueuedJob));
 
     controller.Approve("ORD-20260612-0001");
 
-    EXPECT_EQ(enqueuedOrder.GetId(), "ORD-20260612-0001");
+    EXPECT_EQ(enqueuedJob.GetOrderId(), "ORD-20260612-0001");
+    EXPECT_GT(enqueuedJob.GetActualQty(), 0);
 }
 
 TEST(OrderControllerTest, ApproveOrder_NonReservedOrder_ThrowsException) {

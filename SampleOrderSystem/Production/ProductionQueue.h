@@ -1,11 +1,23 @@
 #pragma once
 #include "IProductionQueue.h"
-#include <vector>
+#include <deque>
+#include <string>
 
 class ProductionQueue : public IProductionQueue {
-    std::vector<Order> queue_;
+    std::deque<ProductionJob> queue_;
+    std::string               filename_;
+
+    void SaveToFile() const;
+    void LoadFromFile();
+
 public:
-    void Enqueue(const Order& order) override { queue_.push_back(order); }
-    const std::vector<Order>& GetQueue() const { return queue_; }
-    std::size_t Size() const { return queue_.size(); }
+    explicit ProductionQueue(const std::string& filename = "");
+
+    void Enqueue(const ProductionJob& job) override;
+    std::optional<ProductionJob> Dequeue() override;
+    std::optional<ProductionJob> Peek() const override;
+    std::vector<ProductionJob>   GetQueue() const override;
+
+    bool        IsEmpty() const;
+    std::size_t Size()    const;
 };

@@ -2,10 +2,12 @@
 #include "View/MainMenuView.h"
 #include "View/SampleView.h"
 #include "View/OrderView.h"
+#include "View/ProductionView.h"
 #include "Controller/IMenuController.h"
 #include "Controller/MainController.h"
 #include "Controller/SampleController.h"
 #include "Controller/OrderController.h"
+#include "Controller/ProductionController.h"
 #include "Repository/JsonRepository.h"
 #include "Model/Sample.h"
 #include "Model/Order.h"
@@ -31,13 +33,18 @@ int main() {
 
     JsonRepository<Sample> sampleRepo("samples.json");
     JsonRepository<Order>  orderRepo("orders.json");
-    ProductionQueue        productionQueue;
+    ProductionQueue        productionQueue("production_queue.json");
 
-    SampleView sampleView(console);
-    OrderView  orderView(console);
+    SampleView     sampleView(console);
+    OrderView      orderView(console);
+    ProductionView productionView(console);
 
-    SampleController   sampleCtrl(sampleRepo, sampleView);
-    OrderController    orderCtrl(orderRepo, sampleRepo, productionQueue, orderView);
+    SampleController     sampleCtrl(sampleRepo, sampleView);
+    OrderController      orderCtrl(orderRepo, sampleRepo, productionQueue, orderView);
+    ProductionController productionCtrl(productionQueue, orderRepo, sampleRepo, productionView);
+
+    StubMenuController monitorCtrl(console, "모니터링");
+    StubMenuController releaseCtrl(console, "출고 처리");
 
     MainMenuView   menuView(console);
     MainController mainCtrl(&sampleCtrl, &orderCtrl, console);
@@ -46,7 +53,16 @@ int main() {
     while (true) {
         menuView.Show();
         input = console.ReadLine();
-        if (!mainCtrl.ProcessInput(input)) {
+        if (input == "0") {
+            console.PrintLine("시스템을 종료합니다.");
+            break;
+        } else if (input == "4") {
+            monitorCtrl.Run();
+        } else if (input == "5") {
+            productionCtrl.Run();
+        } else if (input == "6") {
+            releaseCtrl.Run();
+        } else if (!mainCtrl.ProcessInput(input)) {
             console.PrintLine("시스템을 종료합니다.");
             break;
         }
