@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="TestMain.cpp" />
     <ClCompile Include="Repository\RepositoryTest.cpp" />
+    <ClCompile Include="Repository\MockRepositoryTest.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>
