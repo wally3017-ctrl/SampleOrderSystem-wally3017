@@ -23,5 +23,8 @@ public:
                      const std::string& customerName,
                      int quantity);
 
+    void Approve(const std::string& orderId);
+    void Reject(const std::string& orderId);
+
     void Run() override;
 };
