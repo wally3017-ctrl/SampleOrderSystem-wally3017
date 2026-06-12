@@ -147,6 +147,7 @@
     <ClCompile Include="Order\OrderControllerTest.cpp" />
     <ClCompile Include="..\Production\ProductionCalculator.cpp" />
     <ClCompile Include="Production\ProductionCalculatorTest.cpp" />
+    <ClCompile Include="Production\ProductionQueueTest.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>

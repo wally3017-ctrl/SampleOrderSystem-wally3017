@@ -1,6 +1,7 @@
 #include "OrderController.h"
 #include "OrderNumberGenerator.h"
 #include "MenuKey.h"
+#include "../Production/ProductionCalculator.h"
 #include <ctime>
 #include <stdexcept>
 
@@ -78,8 +79,13 @@ void OrderController::Approve(const std::string& orderId) {
         sampleRepo_.Update(sample);
         order.SetStatus(OrderStatus::CONFIRMED);
     } else {
+        int shortage  = order.GetQuantity() - sample.GetStock();
+        int actualQty = ProductionCalculator::CalcActualProduction(shortage, sample.GetYield());
+        int totalTime = ProductionCalculator::CalcTotalTime(sample.GetAvgProductionTime(), actualQty);
+        ProductionJob job(order.GetId(), order.GetSampleId(),
+                          shortage, actualQty, totalTime, CurrentTimestamp());
         order.SetStatus(OrderStatus::PRODUCING);
-        productionQueue_.Enqueue(order);
+        productionQueue_.Enqueue(job);
     }
     orderRepo_.Update(order);
 }

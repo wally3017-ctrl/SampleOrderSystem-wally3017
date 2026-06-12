@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\Order.h" />
+    <ClInclude Include="Model\ProductionJob.h" />
     <ClInclude Include="Model\OrderStatus.h" />
     <ClInclude Include="Model\Sample.h" />
     <ClInclude Include="Controller\IMenuController.h" />
