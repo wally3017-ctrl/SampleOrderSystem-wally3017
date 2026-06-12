@@ -1,24 +1,49 @@
 #include "View/ConsoleView.h"
 #include "View/MainMenuView.h"
-#include "Controller/MenuKey.h"
+#include "View/SampleView.h"
+#include "Controller/IMenuController.h"
+#include "Controller/MainController.h"
+#include "Controller/SampleController.h"
+#include "Repository/JsonRepository.h"
+#include "Model/Sample.h"
 #include <windows.h>
 
-// Phase 2~6 에서 각 Controller 가 연결됨
-// Phase 1-5: 메뉴 UI 동작만 확인
+// 아직 구현되지 않은 메뉴 컨트롤러 플레이스홀더
+class StubMenuController : public IMenuController {
+    ConsoleView& console_;
+    std::string  label_;
+public:
+    StubMenuController(ConsoleView& console, std::string label)
+        : console_(console), label_(std::move(label)) {}
+    void Run() override {
+        console_.PrintLine(" [" + label_ + "] 기능은 추후 구현 예정입니다.");
+    }
+};
+
 int main() {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 
-    ConsoleView  console;
-    MainMenuView menuView(console);
+    ConsoleView console;
 
-    menuView.Show();
+    JsonRepository<Sample> sampleRepo("samples.json");
 
-    std::string input = console.ReadLine();
-    if (input == MenuKey::EXIT) {
-        console.PrintLine("시스템을 종료합니다.");
-    } else {
-        console.PrintError("Phase 1: 세부 기능은 Phase 2 이후 구현됩니다.");
+    SampleView sampleView(console);
+
+    SampleController   sampleCtrl(sampleRepo, sampleView);
+    StubMenuController orderCtrl(console, "시료 주문");   // Phase 3에서 교체 예정
+
+    MainMenuView   menuView(console);
+    MainController mainCtrl(&sampleCtrl, &orderCtrl, console);
+
+    std::string input;
+    while (true) {
+        menuView.Show();
+        input = console.ReadLine();
+        if (!mainCtrl.ProcessInput(input)) {
+            console.PrintLine("시스템을 종료합니다.");
+            break;
+        }
     }
 
     return 0;
