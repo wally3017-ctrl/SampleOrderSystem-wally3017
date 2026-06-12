@@ -135,6 +135,8 @@
     <ClCompile Include="Repository\RepositoryTest.cpp" />
     <ClCompile Include="Repository\MockRepositoryTest.cpp" />
     <ClCompile Include="..\Controller\MainController.cpp" />
+    <ClCompile Include="..\View\ConsoleView.cpp" />
+    <ClCompile Include="..\View\MainMenuView.cpp" />
     <ClCompile Include="Controller\MainControllerTest.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>

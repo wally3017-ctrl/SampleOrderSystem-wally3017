@@ -1,7 +1,5 @@
 #include "MainController.h"
 
-// Phase 1-3 [Red]: 스텁 - 라우팅 미구현 상태로 모든 테스트 실패
-
 MainController::MainController(IMenuController* sample,
                                IMenuController* order,
                                std::ostream&    output)
@@ -11,7 +9,12 @@ MainController::MainController(IMenuController* sample,
 {}
 
 bool MainController::ProcessInput(const std::string& input) {
-    return true; // 항상 계속 → 0 입력 시 종료 테스트 실패
+    if (input == "0") return false;
+    if (input == "1") { sampleController_->Run(); return true; }
+    if (input == "2") { orderController_->Run(); return true; }
+
+    output_ << "[오류] 잘못된 메뉴 번호입니다: " << input << "\n";
+    return true;
 }
 
 void MainController::Run(std::istream& input) {

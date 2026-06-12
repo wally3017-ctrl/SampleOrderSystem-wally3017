@@ -144,9 +144,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Controller\MainController.cpp" />
+    <ClCompile Include="View\ConsoleView.cpp" />
+    <ClCompile Include="View\MainMenuView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller\IMenuController.h" />
+    <ClInclude Include="View\ConsoleView.h" />
+    <ClInclude Include="View\MainMenuView.h" />
     <ClInclude Include="Controller\MainController.h" />
     <ClInclude Include="Repository\IRepository.h" />
     <ClInclude Include="Repository\JsonRepository.h" />
