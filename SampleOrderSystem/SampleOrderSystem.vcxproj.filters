@@ -24,6 +24,9 @@
     <ClCompile Include="Controller\MainController.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Controller\SampleController.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="View\ConsoleView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
