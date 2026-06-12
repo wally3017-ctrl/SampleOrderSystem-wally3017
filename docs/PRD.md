@@ -105,9 +105,19 @@ RESERVED → (승인) → 재고 충분: CONFIRMED → RELEASED
 
 ---
 
-## 7. 미션 구성
+## 7. 참조 PoC 항목
 
-| 미션 | 내용 |
-|------|------|
-| 미션 1 (PoC) | MVC 스켈레톤 / 데이터 영속성 / 데이터 모니터링 Tool / Dummy 데이터 생성 Tool |
-| 미션 2 (본 개발) | 전체 기능 명세 구현 + 문서 관리 + Harness + Test + CleanCode + Commit 이력 |
+본 프로젝트 개발 전 기능을 검증하기 위해 아래 PoC를 별도 Repository로 선행 개발한다.
+
+| PoC 항목 | Repository | 설명 |
+|----------|-----------|------|
+| MVC 스켈레톤 코드 | [ConsoleMVC-wally3017](https://github.com/wally3017-ctrl/ConsoleMVC-wally3017.git) | Model / Controller / View 패키지 구조와 역할 분리 검증 |
+| 데이터 영속성 처리 | [DataPersistence-wally3017](https://github.com/wally3017-ctrl/DataPersistence-wally3017.git) | 파일/JSON 기반 데이터 저장·불러오기 및 CRUD 검증 |
+| 데이터 모니터링 Tool | [DataMonitor-wally3017](https://github.com/wally3017-ctrl/DataMonitor-wally3017.git) | 저장된 데이터 상태를 콘솔에서 실시간 조회하는 관리자 도구 |
+| Dummy 데이터 생성 Tool | [DummyDataGenerator-wally3017](https://github.com/wally3017-ctrl/DummyDataGenerator-wally3017.git) | 테스트용 Dummy Data 생성 및 DB 추가 도구 |
+
+---
+
+## 8. 관련 문서
+
+- [PLAN.md](../temp_docs/PLAN.md) — 개발 계획 및 TDD Phase 일정
