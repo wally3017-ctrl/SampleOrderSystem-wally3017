@@ -11,6 +11,7 @@ public:
 
     void ShowMenu();
     void ShowReservedList(const std::vector<Order>& orders);
+    void ShowApprovalActions();
     void ShowPlacedOrder(const Order& order);
     void ShowApprovalResult(const Order& order);
     void ShowRejectionResult(const Order& order);

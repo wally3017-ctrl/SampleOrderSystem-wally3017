@@ -167,6 +167,7 @@
     <ClInclude Include="View\SampleView.h" />
     <ClInclude Include="Controller\MainController.h" />
     <ClInclude Include="Production\IProductionQueue.h" />
+    <ClInclude Include="Production\ProductionQueue.h" />
     <ClInclude Include="Repository\IRepository.h" />
     <ClInclude Include="Repository\Persistable.h" />
     <ClInclude Include="Repository\JsonRepository.h" />

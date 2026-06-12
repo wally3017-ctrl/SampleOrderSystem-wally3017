@@ -36,6 +36,93 @@ Order OrderController::PlaceOrder(const std::string& sampleId,
     return order;
 }
 
+void OrderController::Approve(const std::string& orderId) {
+    auto orderOpt = orderRepo_.Load(orderId);
+    if (!orderOpt.has_value())
+        throw std::invalid_argument("존재하지 않는 주문 번호입니다: " + orderId);
+
+    Order order = orderOpt.value();
+    if (order.GetStatus() != OrderStatus::RESERVED)
+        throw std::invalid_argument("RESERVED 상태의 주문만 승인할 수 있습니다.");
+
+    auto sampleOpt = sampleRepo_.Load(order.GetSampleId());
+    if (!sampleOpt.has_value())
+        throw std::invalid_argument("시료를 찾을 수 없습니다: " + order.GetSampleId());
+
+    Sample sample = sampleOpt.value();
+    if (sample.GetStock() >= order.GetQuantity()) {
+        sample.SetStock(sample.GetStock() - order.GetQuantity());
+        sampleRepo_.Update(sample);
+        order.SetStatus(OrderStatus::CONFIRMED);
+    } else {
+        order.SetStatus(OrderStatus::PRODUCING);
+        productionQueue_.Enqueue(order);
+    }
+    orderRepo_.Update(order);
+}
+
+void OrderController::Reject(const std::string& orderId) {
+    auto orderOpt = orderRepo_.Load(orderId);
+    if (!orderOpt.has_value())
+        throw std::invalid_argument("존재하지 않는 주문 번호입니다: " + orderId);
+
+    Order order = orderOpt.value();
+    if (order.GetStatus() != OrderStatus::RESERVED)
+        throw std::invalid_argument("RESERVED 상태의 주문만 거절할 수 있습니다.");
+
+    order.SetStatus(OrderStatus::REJECTED);
+    orderRepo_.Update(order);
+}
+
+namespace {
+    constexpr std::string_view SUB_PLACE   = "1";
+    constexpr std::string_view SUB_APPROVE = "2";
+    constexpr std::string_view ACT_APPROVE = "1";
+    constexpr std::string_view ACT_REJECT  = "2";
+}
+
 void OrderController::Run() {
-    // Phase 3-4에서 구현
+    std::string input;
+    while (true) {
+        view_.ShowMenu();
+        input = view_.ReadInput();
+        if (input == MenuKey::EXIT) break;
+
+        if (input == SUB_PLACE) {
+            try {
+                std::string sampleId     = view_.ReadSampleId();
+                std::string customerName = view_.ReadCustomerName();
+                int         quantity     = view_.ReadQuantity();
+                Order order = PlaceOrder(sampleId, customerName, quantity);
+                view_.ShowPlacedOrder(order);
+            } catch (const std::invalid_argument& e) {
+                view_.ShowError(e.what());
+            }
+        } else if (input == SUB_APPROVE) {
+            auto all = orderRepo_.LoadAll();
+            std::vector<Order> reserved;
+            for (const auto& o : all)
+                if (o.GetStatus() == OrderStatus::RESERVED)
+                    reserved.push_back(o);
+            view_.ShowReservedList(reserved);
+            if (reserved.empty()) continue;
+
+            try {
+                std::string orderId = view_.ReadOrderId();
+                view_.ShowApprovalActions();
+                std::string action = view_.ReadInput();
+                if (action == ACT_APPROVE) {
+                    Approve(orderId);
+                    auto opt = orderRepo_.Load(orderId);
+                    if (opt.has_value()) view_.ShowApprovalResult(opt.value());
+                } else if (action == ACT_REJECT) {
+                    Reject(orderId);
+                    auto opt = orderRepo_.Load(orderId);
+                    if (opt.has_value()) view_.ShowRejectionResult(opt.value());
+                }
+            } catch (const std::invalid_argument& e) {
+                view_.ShowError(e.what());
+            }
+        }
+    }
 }
