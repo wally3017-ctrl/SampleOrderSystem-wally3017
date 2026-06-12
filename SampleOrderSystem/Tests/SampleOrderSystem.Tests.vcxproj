@@ -145,6 +145,7 @@
     <ClCompile Include="Controller\MainControllerTest.cpp" />
     <ClCompile Include="Sample\SampleControllerTest.cpp" />
     <ClCompile Include="Order\OrderControllerTest.cpp" />
+    <ClCompile Include="..\Production\ProductionCalculator.cpp" />
     <ClCompile Include="Production\ProductionCalculatorTest.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>

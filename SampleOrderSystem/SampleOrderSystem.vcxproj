@@ -145,6 +145,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Controller\MainController.cpp" />
     <ClCompile Include="Controller\OrderController.cpp" />
+    <ClCompile Include="Production\ProductionCalculator.cpp" />
     <ClCompile Include="Controller\OrderNumberGenerator.cpp" />
     <ClCompile Include="Controller\SampleController.cpp" />
     <ClCompile Include="View\ConsoleView.cpp" />
