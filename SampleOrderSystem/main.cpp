@@ -41,7 +41,7 @@ int main() {
 
     SampleController     sampleCtrl(sampleRepo, sampleView);
     OrderController      orderCtrl(orderRepo, sampleRepo, productionQueue, orderView);
-    ProductionController productionCtrl(productionQueue, productionView);
+    ProductionController productionCtrl(productionQueue, orderRepo, sampleRepo, productionView);
 
     StubMenuController monitorCtrl(console, "모니터링");
     StubMenuController releaseCtrl(console, "출고 처리");

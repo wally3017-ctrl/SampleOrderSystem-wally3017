@@ -145,10 +145,13 @@
     <ClCompile Include="Controller\MainControllerTest.cpp" />
     <ClCompile Include="Sample\SampleControllerTest.cpp" />
     <ClCompile Include="Order\OrderControllerTest.cpp" />
+    <ClCompile Include="..\Controller\ProductionController.cpp" />
     <ClCompile Include="..\Production\ProductionCalculator.cpp" />
     <ClCompile Include="..\Production\ProductionQueue.cpp" />
+    <ClCompile Include="..\View\ProductionView.cpp" />
     <ClCompile Include="Production\ProductionCalculatorTest.cpp" />
     <ClCompile Include="Production\ProductionQueueTest.cpp" />
+    <ClCompile Include="Production\ProductionControllerTest.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>

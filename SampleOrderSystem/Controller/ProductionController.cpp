@@ -1,18 +1,19 @@
 #include "ProductionController.h"
 
-ProductionController::ProductionController(ProductionQueue& queue, ProductionView& view)
-    : queue_(queue), view_(view)
+ProductionController::ProductionController(IProductionQueue&    queue,
+                                           IRepository<Order>&  orderRepo,
+                                           IRepository<Sample>& sampleRepo,
+                                           ProductionView&      view)
+    : queue_(queue), orderRepo_(orderRepo), sampleRepo_(sampleRepo), view_(view)
 {}
 
 void ProductionController::Run() {
-    auto current = queue_.Peek();
-
-    std::vector<ProductionJob> waiting;
-    if (!queue_.IsEmpty()) {
-        auto all = queue_.GetQueue();
-        if (all.size() > 1)
-            waiting.assign(all.begin() + 1, all.end());
-    }
+    auto all     = queue_.GetQueue();
+    auto current = all.empty()
+        ? std::optional<ProductionJob>{}
+        : std::optional<ProductionJob>(all.front());
+    std::vector<ProductionJob> waiting(
+        all.size() > 1 ? all.begin() + 1 : all.end(), all.end());
 
     view_.ShowQueue(current, waiting);
 }
