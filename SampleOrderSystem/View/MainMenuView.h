@@ -1,12 +1,6 @@
 #pragma once
 #include "ConsoleView.h"
-
-struct SystemSummary {
-    int sampleCount         = 0;
-    int totalStock          = 0;
-    int totalOrders         = 0;
-    int productionQueueCount = 0;
-};
+#include "../Model/SystemSummary.h"
 
 class MainMenuView {
     ConsoleView& console_;

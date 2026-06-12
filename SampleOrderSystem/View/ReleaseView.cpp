@@ -1,4 +1,5 @@
 #include "ReleaseView.h"
+#include "ViewUtils.h"
 #include "../Model/OrderStatus.h"
 
 ReleaseView::ReleaseView(ConsoleView& console) : console_(console) {}
@@ -14,12 +15,10 @@ void ReleaseView::ShowReleasableList(const std::vector<Order>& orders) {
     console_.PrintLine(" 주문번호              시료ID    고객명           수량");
     console_.PrintLine(" " + std::string(54, '-'));
     for (const auto& order : orders) {
-        console_.PrintLine(" " + order.GetId()
-            + std::string(std::max(1, 22 - (int)order.GetId().size()), ' ')
-            + order.GetSampleId()
-            + std::string(std::max(1, 10 - (int)order.GetSampleId().size()), ' ')
-            + order.GetCustomerName()
-            + std::string(std::max(1, 17 - (int)order.GetCustomerName().size()), ' ')
+        console_.PrintLine(" "
+            + ViewUtils::PadTo(order.GetId(),           22)
+            + ViewUtils::PadTo(order.GetSampleId(),     10)
+            + ViewUtils::PadTo(order.GetCustomerName(), 17)
             + std::to_string(order.GetQuantity()) + "ea");
     }
     console_.PrintSeparator();

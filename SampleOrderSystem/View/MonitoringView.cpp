@@ -1,4 +1,5 @@
 #include "MonitoringView.h"
+#include "ViewUtils.h"
 
 MonitoringView::MonitoringView(ConsoleView& console) : console_(console) {}
 
@@ -19,16 +20,12 @@ void MonitoringView::ShowMonitoring(const OrderSummary& summary,
     console_.PrintLine(" 시료ID      시료명              재고   주문대기  상태");
     console_.PrintLine(" " + std::string(54, '-'));
     for (const auto& info : stockInfos) {
-        std::string line = " " + info.sampleId
-            + std::string(std::max(1, 12 - (int)info.sampleId.size()), ' ')
-            + info.sampleName
-            + std::string(std::max(1, 20 - (int)info.sampleName.size()), ' ')
-            + std::to_string(info.stock)
-            + std::string(std::max(1, 7 - (int)std::to_string(info.stock).size()), ' ')
-            + std::to_string(info.orderedQty)
-            + std::string(std::max(1, 9 - (int)std::to_string(info.orderedQty).size()), ' ')
-            + "[" + ToString(info.status) + "]";
-        console_.PrintLine(line);
+        console_.PrintLine(" "
+            + ViewUtils::PadTo(info.sampleId,   12)
+            + ViewUtils::PadTo(info.sampleName, 20)
+            + ViewUtils::PadTo(std::to_string(info.stock),      7)
+            + ViewUtils::PadTo(std::to_string(info.orderedQty), 9)
+            + "[" + ToString(info.status) + "]");
     }
     if (stockInfos.empty())
         console_.PrintLine(" 등록된 시료가 없습니다.");

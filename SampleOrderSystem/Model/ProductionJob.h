@@ -22,7 +22,6 @@ public:
         , enqueuedAt_(std::move(enqueuedAt))
     {}
 
-    std::string GetId()         const { return orderId_; }
     std::string GetOrderId()    const { return orderId_; }
     std::string GetSampleId()   const { return sampleId_; }
     int         GetShortage()   const { return shortage_; }

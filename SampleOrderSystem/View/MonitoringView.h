@@ -1,6 +1,7 @@
 #pragma once
 #include "ConsoleView.h"
-#include "../Controller/MonitoringService.h"
+#include "../Model/OrderSummary.h"
+#include "../Model/SampleStockInfo.h"
 #include <vector>
 
 class MonitoringView {

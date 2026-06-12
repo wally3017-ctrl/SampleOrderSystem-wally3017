@@ -1,19 +1,16 @@
 #pragma once
 #include "IMenuController.h"
 #include "../View/ConsoleView.h"
+#include <map>
 #include <string>
 
 class MainController {
-    IMenuController* sampleController_;
-    IMenuController* orderController_;
-    ConsoleView&     console_;
+    std::map<std::string, IMenuController*> menuMap_;
+    ConsoleView& console_;
 
 public:
-    MainController(IMenuController* sample,
-                   IMenuController* order,
-                   ConsoleView&     console);
+    explicit MainController(ConsoleView& console);
 
+    void Register(const std::string& key, IMenuController* controller);
     bool ProcessInput(const std::string& input);
-
-    void Run(std::istream& input = std::cin);
 };
