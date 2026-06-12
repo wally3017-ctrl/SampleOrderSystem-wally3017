@@ -149,12 +149,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller\IMenuController.h" />
+    <ClInclude Include="Controller\MenuKey.h" />
     <ClInclude Include="View\ConsoleView.h" />
     <ClInclude Include="View\MainMenuView.h" />
     <ClInclude Include="Controller\MainController.h" />
     <ClInclude Include="Repository\IRepository.h" />
+    <ClInclude Include="Repository\Persistable.h" />
     <ClInclude Include="Repository\JsonRepository.h" />
-    <ClInclude Include="Repository\MockRepository.h" />
     <ClInclude Include="Utility\JsonObject.h" />
   </ItemGroup>
   <ItemDefinitionGroup>

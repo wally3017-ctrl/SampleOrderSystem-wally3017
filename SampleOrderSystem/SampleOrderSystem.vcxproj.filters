@@ -41,16 +41,19 @@
     <ClInclude Include="Controller\IMenuController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Controller\MenuKey.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Controller\MainController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Repository\IRepository.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Repository\JsonRepository.h">
+    <ClInclude Include="Repository\Persistable.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Repository\MockRepository.h">
+    <ClInclude Include="Repository\JsonRepository.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Utility\JsonObject.h">

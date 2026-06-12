@@ -1,5 +1,6 @@
 #pragma once
 #include "IRepository.h"
+#include "Persistable.h"
 #include "../Utility/JsonObject.h"
 #include <filesystem>
 #include <fstream>
@@ -7,13 +8,6 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-
-template<typename T>
-concept Persistable = requires(const T& t, const JsonObject& j) {
-    { t.GetId() }    -> std::convertible_to<std::string>;
-    { t.ToJson() }   -> std::convertible_to<JsonObject>;
-    { T::FromJson(j) } -> std::same_as<T>;
-};
 
 template<Persistable T>
 class JsonRepository : public IRepository<T> {
@@ -29,7 +23,7 @@ class JsonRepository : public IRepository<T> {
         while (std::getline(file, line)) {
             if (line.empty()) continue;
             try {
-                auto obj = JsonObject::Deserialize(line);
+                auto obj    = JsonObject::Deserialize(line);
                 auto entity = T::FromJson(obj);
                 cache_[entity.GetId()] = entity;
             } catch (...) {}
@@ -71,8 +65,7 @@ public:
     void Update(const T& entity) override {
         if (!cache_.contains(entity.GetId()))
             throw std::runtime_error("엔티티를 찾을 수 없습니다: " + entity.GetId());
-        cache_[entity.GetId()] = entity;
-        FlushToFile();
+        Save(entity);
     }
 
     void Delete(const std::string& id) override {

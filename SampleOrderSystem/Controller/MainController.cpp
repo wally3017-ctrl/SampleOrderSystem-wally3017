@@ -1,19 +1,20 @@
 #include "MainController.h"
+#include "MenuKey.h"
 
 MainController::MainController(IMenuController* sample,
                                IMenuController* order,
-                               std::ostream&    output)
+                               ConsoleView&     console)
     : sampleController_(sample)
     , orderController_(order)
-    , output_(output)
+    , console_(console)
 {}
 
 bool MainController::ProcessInput(const std::string& input) {
-    if (input == "0") return false;
-    if (input == "1") { sampleController_->Run(); return true; }
-    if (input == "2") { orderController_->Run(); return true; }
+    if (input == MenuKey::EXIT)   return false;
+    if (input == MenuKey::SAMPLE) { sampleController_->Run(); return true; }
+    if (input == MenuKey::ORDER)  { orderController_->Run();  return true; }
 
-    output_ << "[오류] 잘못된 메뉴 번호입니다: " << input << "\n";
+    console_.PrintError("잘못된 메뉴 번호입니다: " + input);
     return true;
 }
 
