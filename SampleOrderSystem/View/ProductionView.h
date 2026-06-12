@@ -10,9 +10,8 @@ public:
     explicit ProductionView(ConsoleView& console);
     void ShowQueue(const std::optional<ProductionJob>& current,
                    const std::vector<ProductionJob>&    waiting);
-    void ShowProductionMenu();
     void ShowCompleted(const ProductionJob& job);
     void ShowAutoCompleted(const ProductionJob& job);
-    void ShowEmptyQueue();
+    void ShowBackMenu();
     std::string ReadInput();
 };

@@ -59,28 +59,13 @@ void ProductionController::AutoComplete() {
 
 void ProductionController::Run() {
     AutoComplete();
-    while (true) {
-        auto all     = queue_.GetQueue();
-        auto current = all.empty()
-            ? std::optional<ProductionJob>{}
-            : std::optional<ProductionJob>(all.front());
-        std::vector<ProductionJob> waiting(
-            all.size() > 1 ? all.begin() + 1 : all.end(), all.end());
-
-        view_.ShowQueue(current, waiting);
-
-        if (!current.has_value()) {
-            view_.ShowEmptyQueue();
-            break;
-        }
-
-        view_.ShowProductionMenu();
-        std::string input = view_.ReadInput();
-        if (input == "0") break;
-        if (input == "1") {
-            ProductionJob completedJob = current.value();
-            Complete();
-            view_.ShowCompleted(completedJob);
-        }
-    }
+    auto all     = queue_.GetQueue();
+    auto current = all.empty()
+        ? std::optional<ProductionJob>{}
+        : std::optional<ProductionJob>(all.front());
+    std::vector<ProductionJob> waiting(
+        all.size() > 1 ? all.begin() + 1 : all.end(), all.end());
+    view_.ShowQueue(current, waiting);
+    view_.ShowBackMenu();
+    view_.ReadInput();
 }

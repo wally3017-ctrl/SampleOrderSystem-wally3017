@@ -44,11 +44,6 @@ void ProductionView::ShowQueue(const std::optional<ProductionJob>& current,
     console_.PrintSeparator();
 }
 
-void ProductionView::ShowProductionMenu() {
-    console_.PrintLine(" 1. 생산 완료 처리    0. 메인 메뉴로 돌아가기");
-    console_.Print(" 선택 >> ");
-}
-
 void ProductionView::ShowCompleted(const ProductionJob& job) {
     console_.PrintLine(" [생산 완료] " + job.GetOrderId()
         + " (시료:" + job.GetSampleId()
@@ -63,8 +58,9 @@ void ProductionView::ShowAutoCompleted(const ProductionJob& job) {
         + " → CONFIRMED 전환");
 }
 
-void ProductionView::ShowEmptyQueue() {
-    console_.PrintLine(" 현재 생산 대기 중인 작업이 없습니다.");
+void ProductionView::ShowBackMenu() {
+    console_.PrintLine(" 0. 메인 메뉴로 돌아가기");
+    console_.Print(" 선택 >> ");
 }
 
 std::string ProductionView::ReadInput() {
