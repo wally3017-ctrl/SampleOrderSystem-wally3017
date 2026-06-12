@@ -41,14 +41,23 @@ int main() {
 
     MonitoringService    monitoringSvc(orderRepo, sampleRepo);
     MonitoringController monitorCtrl(monitoringSvc, monitoringView);
-    ReleaseController    releaseCtrl(orderRepo, releaseView);
+    ReleaseController    releaseCtrl(orderRepo, sampleRepo, releaseView);
 
     MainMenuView   menuView(console);
     MainController mainCtrl(&sampleCtrl, &orderCtrl, console);
 
     std::string input;
     while (true) {
-        menuView.Show();
+        productionCtrl.AutoComplete();
+
+        SystemSummary summary;
+        for (const auto& s : sampleRepo.LoadAll()) {
+            summary.sampleCount++;
+            summary.totalStock += s.GetStock();
+        }
+        summary.totalOrders         = static_cast<int>(orderRepo.LoadAll().size());
+        summary.productionQueueCount = static_cast<int>(productionQueue.GetQueue().size());
+        menuView.Show(summary);
         input = console.ReadLine();
         if (input == "0") {
             console.PrintLine("시스템을 종료합니다.");

@@ -31,8 +31,12 @@ namespace {
                 std::string("RESERVED 상태의 주문만 ") + std::string(action) + "할 수 있습니다.");
     }
 
-    bool HasSufficientStock(const Sample& sample, int quantity) {
-        return sample.GetStock() >= quantity;
+    int CalcConfirmedQty(IRepository<Order>& repo, const std::string& sampleId) {
+        int total = 0;
+        for (const auto& o : repo.LoadAll())
+            if (o.GetSampleId() == sampleId && o.GetStatus() == OrderStatus::CONFIRMED)
+                total += o.GetQuantity();
+        return total;
     }
 
     std::string CurrentTimestamp() {
@@ -73,13 +77,14 @@ void OrderController::Approve(const std::string& orderId) {
     Order order = LoadOrderOrThrow(orderRepo_, orderId);
     AssertReservedStatus(order, "승인");
 
-    Sample sample = LoadSampleOrThrow(sampleRepo_, order.GetSampleId());
-    if (HasSufficientStock(sample, order.GetQuantity())) {
-        sample.SetStock(sample.GetStock() - order.GetQuantity());
-        sampleRepo_.Update(sample);
+    Sample sample         = LoadSampleOrThrow(sampleRepo_, order.GetSampleId());
+    int    confirmedQty   = CalcConfirmedQty(orderRepo_, order.GetSampleId());
+    int    availableStock = sample.GetStock() - confirmedQty;
+
+    if (availableStock >= order.GetQuantity()) {
         order.SetStatus(OrderStatus::CONFIRMED);
     } else {
-        int shortage  = order.GetQuantity() - sample.GetStock();
+        int shortage  = order.GetQuantity() - std::max(0, availableStock);
         int actualQty = ProductionCalculator::CalcActualProduction(shortage, sample.GetYield());
         int totalTime = ProductionCalculator::CalcTotalTime(sample.GetAvgProductionTime(), actualQty);
         ProductionJob job(order.GetId(), order.GetSampleId(),
