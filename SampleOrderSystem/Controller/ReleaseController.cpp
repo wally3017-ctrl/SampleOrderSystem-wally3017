@@ -1,4 +1,5 @@
 #include "ReleaseController.h"
+#include "../Repository/RepositoryUtils.h"
 #include <stdexcept>
 
 ReleaseController::ReleaseController(IRepository<Order>&  orderRepo,
@@ -8,11 +9,8 @@ ReleaseController::ReleaseController(IRepository<Order>&  orderRepo,
 {}
 
 void ReleaseController::Release(const std::string& orderId) {
-    auto opt = orderRepo_.Load(orderId);
-    if (!opt.has_value())
-        throw std::invalid_argument("존재하지 않는 주문 번호입니다: " + orderId);
+    Order order = LoadOrThrow(orderRepo_, orderId, "존재하지 않는 주문 번호입니다: ");
 
-    Order order = opt.value();
     if (order.GetStatus() != OrderStatus::CONFIRMED)
         throw std::invalid_argument("CONFIRMED 상태의 주문만 출고할 수 있습니다.");
 

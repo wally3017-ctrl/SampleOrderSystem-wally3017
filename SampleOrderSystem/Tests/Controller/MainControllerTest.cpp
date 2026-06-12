@@ -5,57 +5,50 @@
 #include "View/ConsoleView.h"
 #include "MockMenuController.h"
 
-
-TEST(MainControllerTest, MainController_Input1_InvokesSampleController) {
-    MockMenuController sampleMock;
-    MockMenuController orderMock;
+struct MainTestFixture {
     std::ostringstream out;
     std::istringstream in;
-    ConsoleView console(out, in);
-    MainController controller(&sampleMock, &orderMock, console);
+    ConsoleView        console{ out, in };
+    MockMenuController sampleMock;
+    MockMenuController orderMock;
+    MainController     controller{ console };
 
-    EXPECT_CALL(sampleMock, Run()).Times(1);
-    EXPECT_CALL(orderMock,  Run()).Times(0);
+    MainTestFixture() {
+        controller.Register("1", &sampleMock);
+        controller.Register("2", &orderMock);
+    }
+};
 
-    controller.ProcessInput("1");
+TEST(MainControllerTest, MainController_Input1_InvokesSampleController) {
+    MainTestFixture f;
+
+    EXPECT_CALL(f.sampleMock, Run()).Times(1);
+    EXPECT_CALL(f.orderMock,  Run()).Times(0);
+
+    f.controller.ProcessInput("1");
 }
 
 TEST(MainControllerTest, MainController_Input2_InvokesOrderController) {
-    MockMenuController sampleMock;
-    MockMenuController orderMock;
-    std::ostringstream out;
-    std::istringstream in;
-    ConsoleView console(out, in);
-    MainController controller(&sampleMock, &orderMock, console);
+    MainTestFixture f;
 
-    EXPECT_CALL(sampleMock, Run()).Times(0);
-    EXPECT_CALL(orderMock,  Run()).Times(1);
+    EXPECT_CALL(f.sampleMock, Run()).Times(0);
+    EXPECT_CALL(f.orderMock,  Run()).Times(1);
 
-    controller.ProcessInput("2");
+    f.controller.ProcessInput("2");
 }
 
 TEST(MainControllerTest, MainController_Input0_ExitsLoop) {
-    MockMenuController sampleMock;
-    MockMenuController orderMock;
-    std::ostringstream out;
-    std::istringstream in;
-    ConsoleView console(out, in);
-    MainController controller(&sampleMock, &orderMock, console);
+    MainTestFixture f;
 
-    bool result = controller.ProcessInput("0");
+    bool result = f.controller.ProcessInput("0");
 
     EXPECT_FALSE(result);
 }
 
 TEST(MainControllerTest, MainController_InvalidInput_ShowsErrorMessage) {
-    MockMenuController sampleMock;
-    MockMenuController orderMock;
-    std::ostringstream out;
-    std::istringstream in;
-    ConsoleView console(out, in);
-    MainController controller(&sampleMock, &orderMock, console);
+    MainTestFixture f;
 
-    controller.ProcessInput("9");
+    f.controller.ProcessInput("9");
 
-    EXPECT_FALSE(out.str().empty());
+    EXPECT_FALSE(f.out.str().empty());
 }

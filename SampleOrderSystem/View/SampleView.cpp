@@ -1,27 +1,20 @@
 #include "SampleView.h"
+#include "ViewUtils.h"
 #include <stdexcept>
 
 namespace {
     constexpr int COL_ID        = 10;
     constexpr int COL_NAME      = 18;
     constexpr int COL_TIME      =  6;
-    constexpr int COL_YIELD_PAD =  4;
     constexpr int TABLE_WIDTH   = 57;
-
-    std::string pad(int width, int used) {
-        return std::string(std::max(1, width - used), ' ');
-    }
 
     std::string FormatSampleRow(const Sample& s) {
         std::string timeStr = std::to_string(s.GetAvgProductionTime());
-        return " " + s.GetId()
-            + pad(COL_ID,   (int)s.GetId().size())
-            + s.GetName()
-            + pad(COL_NAME, (int)s.GetName().size())
-            + timeStr + "min"
-            + pad(COL_TIME, (int)timeStr.size())
-            + std::to_string(static_cast<int>(s.GetYield() * 100)) + "%"
-            + std::string(COL_YIELD_PAD, ' ')
+        return " "
+            + ViewUtils::PadTo(s.GetId(),   COL_ID)
+            + ViewUtils::PadTo(s.GetName(), COL_NAME)
+            + ViewUtils::PadTo(timeStr + "min", COL_TIME + 3)
+            + std::to_string(static_cast<int>(s.GetYield() * 100)) + "%    "
             + std::to_string(s.GetStock()) + "개";
     }
 }

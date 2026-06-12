@@ -4,15 +4,15 @@
 #include "View/OrderView.h"
 #include "View/ProductionView.h"
 #include "View/MonitoringView.h"
-#include "Controller/IMenuController.h"
-#include "Controller/MonitoringService.h"
-#include "Controller/MonitoringController.h"
-#include "Controller/ReleaseController.h"
 #include "View/ReleaseView.h"
 #include "Controller/MainController.h"
 #include "Controller/SampleController.h"
 #include "Controller/OrderController.h"
 #include "Controller/ProductionController.h"
+#include "Controller/MonitoringService.h"
+#include "Controller/MonitoringController.h"
+#include "Controller/ReleaseController.h"
+#include "Controller/MenuKey.h"
 #include "Repository/JsonRepository.h"
 #include "Model/Sample.h"
 #include "Model/Order.h"
@@ -44,31 +44,20 @@ int main() {
     ReleaseController    releaseCtrl(orderRepo, sampleRepo, releaseView);
 
     MainMenuView   menuView(console);
-    MainController mainCtrl(&sampleCtrl, &orderCtrl, console);
+    MainController mainCtrl(console);
+    mainCtrl.Register(std::string(MenuKey::SAMPLE),     &sampleCtrl);
+    mainCtrl.Register(std::string(MenuKey::ORDER),      &orderCtrl);
+    mainCtrl.Register(std::string(MenuKey::MONITORING), &monitorCtrl);
+    mainCtrl.Register(std::string(MenuKey::PRODUCTION), &productionCtrl);
+    mainCtrl.Register(std::string(MenuKey::RELEASE),    &releaseCtrl);
 
     std::string input;
     while (true) {
         productionCtrl.AutoComplete();
-
-        SystemSummary summary;
-        for (const auto& s : sampleRepo.LoadAll()) {
-            summary.sampleCount++;
-            summary.totalStock += s.GetStock();
-        }
-        summary.totalOrders         = static_cast<int>(orderRepo.LoadAll().size());
-        summary.productionQueueCount = static_cast<int>(productionQueue.GetQueue().size());
-        menuView.Show(summary);
+        menuView.Show(monitoringSvc.GetSystemSummary(
+            static_cast<int>(productionQueue.GetQueue().size())));
         input = console.ReadLine();
-        if (input == "0") {
-            console.PrintLine("시스템을 종료합니다.");
-            break;
-        } else if (input == "4") {
-            monitorCtrl.Run();
-        } else if (input == "5") {
-            productionCtrl.Run();
-        } else if (input == "6") {
-            releaseCtrl.Run();
-        } else if (!mainCtrl.ProcessInput(input)) {
+        if (!mainCtrl.ProcessInput(input)) {
             console.PrintLine("시스템을 종료합니다.");
             break;
         }

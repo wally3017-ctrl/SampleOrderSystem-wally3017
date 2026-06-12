@@ -1,23 +1,6 @@
 #include "ProductionController.h"
-#include <ctime>
-#include <cstdio>
+#include "../Utility/Timestamp.h"
 #include <stdexcept>
-
-namespace {
-    bool IsProductionComplete(const ProductionJob& job) {
-        tm tm_info{};
-        const std::string& ts = job.GetEnqueuedAt();
-        sscanf_s(ts.c_str(), "%d-%d-%d %d:%d:%d",
-                 &tm_info.tm_year, &tm_info.tm_mon,  &tm_info.tm_mday,
-                 &tm_info.tm_hour, &tm_info.tm_min,  &tm_info.tm_sec);
-        tm_info.tm_year -= 1900;
-        tm_info.tm_mon  -= 1;
-        tm_info.tm_isdst = -1;
-        time_t enqueued   = mktime(&tm_info);
-        time_t completion = enqueued + static_cast<time_t>(job.GetTotalTime()) * 60;
-        return time(nullptr) >= completion;
-    }
-}
 
 ProductionController::ProductionController(IProductionQueue&    queue,
                                            IRepository<Order>&  orderRepo,
@@ -50,7 +33,8 @@ void ProductionController::Complete() {
 void ProductionController::AutoComplete() {
     while (true) {
         auto opt = queue_.Peek();
-        if (!opt.has_value() || !IsProductionComplete(opt.value())) break;
+        if (!opt.has_value()) break;
+        if (!Timestamp::IsElapsed(opt.value().GetEnqueuedAt(), opt.value().GetTotalTime())) break;
         ProductionJob job = opt.value();
         Complete();
         view_.ShowAutoCompleted(job);

@@ -1,4 +1,5 @@
 #include "OrderView.h"
+#include "ViewUtils.h"
 #include <stdexcept>
 
 namespace {
@@ -7,17 +8,11 @@ namespace {
     constexpr int COL_CUSTOMER = 14;
     constexpr int TABLE_WIDTH  = 54;
 
-    std::string pad(int width, int used) {
-        return std::string(std::max(1, width - used), ' ');
-    }
-
     std::string FormatOrderRow(const Order& o) {
-        return " " + o.GetId()
-            + pad(COL_ORDERID,  (int)o.GetId().size())
-            + o.GetSampleId()
-            + pad(COL_SAMPLEID, (int)o.GetSampleId().size())
-            + o.GetCustomerName()
-            + pad(COL_CUSTOMER, (int)o.GetCustomerName().size())
+        return " "
+            + ViewUtils::PadTo(o.GetId(),           COL_ORDERID)
+            + ViewUtils::PadTo(o.GetSampleId(),      COL_SAMPLEID)
+            + ViewUtils::PadTo(o.GetCustomerName(),  COL_CUSTOMER)
             + std::to_string(o.GetQuantity()) + "개";
     }
 }
