@@ -138,6 +138,7 @@
     <ClCompile Include="..\View\ConsoleView.cpp" />
     <ClCompile Include="..\View\MainMenuView.cpp" />
     <ClCompile Include="Controller\MainControllerTest.cpp" />
+    <ClCompile Include="Sample\SampleControllerTest.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>

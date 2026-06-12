@@ -148,8 +148,10 @@
     <ClCompile Include="View\MainMenuView.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Model\Sample.h" />
     <ClInclude Include="Controller\IMenuController.h" />
     <ClInclude Include="Controller\MenuKey.h" />
+    <ClInclude Include="Controller\SampleController.h" />
     <ClInclude Include="View\ConsoleView.h" />
     <ClInclude Include="View\MainMenuView.h" />
     <ClInclude Include="Controller\MainController.h" />
