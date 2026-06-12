@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <sstream>
-#include "Integration/InMemoryRepository.h"
+#include "InMemoryRepository.h"
 #include "Controller/OrderController.h"
 #include "Controller/ProductionController.h"
 #include "Controller/ReleaseController.h"
