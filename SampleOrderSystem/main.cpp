@@ -3,7 +3,12 @@
 #include "View/SampleView.h"
 #include "View/OrderView.h"
 #include "View/ProductionView.h"
+#include "View/MonitoringView.h"
 #include "Controller/IMenuController.h"
+#include "Controller/MonitoringService.h"
+#include "Controller/MonitoringController.h"
+#include "Controller/ReleaseController.h"
+#include "View/ReleaseView.h"
 #include "Controller/MainController.h"
 #include "Controller/SampleController.h"
 #include "Controller/OrderController.h"
@@ -13,17 +18,6 @@
 #include "Model/Order.h"
 #include "Production/ProductionQueue.h"
 #include <windows.h>
-
-class StubMenuController : public IMenuController {
-    ConsoleView& console_;
-    std::string  label_;
-public:
-    StubMenuController(ConsoleView& console, std::string label)
-        : console_(console), label_(std::move(label)) {}
-    void Run() override {
-        console_.PrintLine(" [" + label_ + "] 기능은 추후 구현 예정입니다.");
-    }
-};
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
@@ -38,13 +32,16 @@ int main() {
     SampleView     sampleView(console);
     OrderView      orderView(console);
     ProductionView productionView(console);
+    MonitoringView monitoringView(console);
+    ReleaseView    releaseView(console);
 
     SampleController     sampleCtrl(sampleRepo, sampleView);
     OrderController      orderCtrl(orderRepo, sampleRepo, productionQueue, orderView);
     ProductionController productionCtrl(productionQueue, orderRepo, sampleRepo, productionView);
 
-    StubMenuController monitorCtrl(console, "모니터링");
-    StubMenuController releaseCtrl(console, "출고 처리");
+    MonitoringService    monitoringSvc(orderRepo, sampleRepo);
+    MonitoringController monitorCtrl(monitoringSvc, monitoringView);
+    ReleaseController    releaseCtrl(orderRepo, releaseView);
 
     MainMenuView   menuView(console);
     MainController mainCtrl(&sampleCtrl, &orderCtrl, console);

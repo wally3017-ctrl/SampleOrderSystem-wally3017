@@ -152,6 +152,14 @@
     <ClCompile Include="Production\ProductionCalculatorTest.cpp" />
     <ClCompile Include="Production\ProductionQueueTest.cpp" />
     <ClCompile Include="Production\ProductionControllerTest.cpp" />
+    <ClCompile Include="Monitoring\MonitoringServiceTest.cpp" />
+    <ClCompile Include="..\Controller\MonitoringService.cpp" />
+    <ClCompile Include="..\Controller\MonitoringController.cpp" />
+    <ClCompile Include="..\View\MonitoringView.cpp" />
+    <ClCompile Include="Release\ReleaseControllerTest.cpp" />
+    <ClCompile Include="..\Controller\ReleaseController.cpp" />
+    <ClCompile Include="..\View\ReleaseView.cpp" />
+    <ClCompile Include="Integration\IntegrationTest.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>
