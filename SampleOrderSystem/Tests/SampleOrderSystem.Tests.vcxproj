@@ -153,6 +153,9 @@
     <ClCompile Include="Production\ProductionQueueTest.cpp" />
     <ClCompile Include="Production\ProductionControllerTest.cpp" />
     <ClCompile Include="Monitoring\MonitoringServiceTest.cpp" />
+    <ClCompile Include="..\Controller\MonitoringService.cpp" />
+    <ClCompile Include="..\Controller\MonitoringController.cpp" />
+    <ClCompile Include="..\View\MonitoringView.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>

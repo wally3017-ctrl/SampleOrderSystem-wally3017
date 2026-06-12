@@ -155,6 +155,9 @@
     <ClCompile Include="View\OrderView.cpp" />
     <ClCompile Include="View\ProductionView.cpp" />
     <ClCompile Include="View\SampleView.cpp" />
+    <ClCompile Include="Controller\MonitoringService.cpp" />
+    <ClCompile Include="Controller\MonitoringController.cpp" />
+    <ClCompile Include="View\MonitoringView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Model\Order.h" />

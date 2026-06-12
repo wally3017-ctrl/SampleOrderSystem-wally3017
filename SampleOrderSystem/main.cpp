@@ -3,7 +3,10 @@
 #include "View/SampleView.h"
 #include "View/OrderView.h"
 #include "View/ProductionView.h"
+#include "View/MonitoringView.h"
 #include "Controller/IMenuController.h"
+#include "Controller/MonitoringService.h"
+#include "Controller/MonitoringController.h"
 #include "Controller/MainController.h"
 #include "Controller/SampleController.h"
 #include "Controller/OrderController.h"
@@ -38,13 +41,15 @@ int main() {
     SampleView     sampleView(console);
     OrderView      orderView(console);
     ProductionView productionView(console);
+    MonitoringView monitoringView(console);
 
     SampleController     sampleCtrl(sampleRepo, sampleView);
     OrderController      orderCtrl(orderRepo, sampleRepo, productionQueue, orderView);
     ProductionController productionCtrl(productionQueue, orderRepo, sampleRepo, productionView);
 
-    StubMenuController monitorCtrl(console, "모니터링");
-    StubMenuController releaseCtrl(console, "출고 처리");
+    MonitoringService    monitoringSvc(orderRepo, sampleRepo);
+    MonitoringController monitorCtrl(monitoringSvc, monitoringView);
+    StubMenuController   releaseCtrl(console, "출고 처리");
 
     MainMenuView   menuView(console);
     MainController mainCtrl(&sampleCtrl, &orderCtrl, console);
