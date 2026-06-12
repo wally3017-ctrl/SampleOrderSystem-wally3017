@@ -138,9 +138,11 @@
     <ClCompile Include="..\Controller\SampleController.cpp" />
     <ClCompile Include="..\View\ConsoleView.cpp" />
     <ClCompile Include="..\View\MainMenuView.cpp" />
+    <ClCompile Include="..\View\OrderView.cpp" />
     <ClCompile Include="..\View\SampleView.cpp" />
     <ClCompile Include="Controller\MainControllerTest.cpp" />
     <ClCompile Include="Sample\SampleControllerTest.cpp" />
+    <ClCompile Include="Order\OrderControllerTest.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>
