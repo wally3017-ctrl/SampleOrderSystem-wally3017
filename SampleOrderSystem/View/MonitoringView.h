@@ -9,4 +9,5 @@ public:
     explicit MonitoringView(ConsoleView& console);
     void ShowMonitoring(const OrderSummary& summary,
                         const std::vector<SampleStockInfo>& stockInfos);
+    std::string ReadInput();
 };

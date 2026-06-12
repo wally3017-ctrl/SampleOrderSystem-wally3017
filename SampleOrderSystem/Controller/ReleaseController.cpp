@@ -39,6 +39,7 @@ void ReleaseController::Run() {
         view_.ShowMenu();
         std::string input = view_.ReadInput();
         if (input == "0") break;
+        if (input != "1") continue;
 
         try {
             std::string orderId = view_.ReadOrderId();

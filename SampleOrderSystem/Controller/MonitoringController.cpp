@@ -6,7 +6,6 @@ MonitoringController::MonitoringController(MonitoringService& service, Monitorin
 {}
 
 void MonitoringController::Run() {
-    auto summary    = service_.GetOrderSummary();
-    auto stockInfos = service_.GetStockInfoAll();
-    view_.ShowMonitoring(summary, stockInfos);
+    view_.ShowMonitoring(service_.GetOrderSummary(), service_.GetStockInfoAll());
+    view_.ReadInput();
 }

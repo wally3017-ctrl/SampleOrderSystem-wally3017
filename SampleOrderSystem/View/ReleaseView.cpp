@@ -4,10 +4,7 @@
 ReleaseView::ReleaseView(ConsoleView& console) : console_(console) {}
 
 void ReleaseView::ShowMenu() {
-    console_.PrintSeparator();
-    console_.PrintLine("                   출고 처리");
-    console_.PrintSeparator();
-    console_.PrintLine(" 0. 메인 메뉴로 돌아가기");
+    console_.PrintLine(" 1. 출고 처리    0. 메인 메뉴로 돌아가기");
     console_.Print(" 선택 >> ");
 }
 

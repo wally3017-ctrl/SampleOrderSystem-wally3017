@@ -35,4 +35,9 @@ void MonitoringView::ShowMonitoring(const OrderSummary& summary,
     console_.PrintSeparator();
     console_.PrintLine(" 0. 메인 메뉴로 돌아가기");
     console_.PrintSeparator();
+    console_.Print(" 선택 >> ");
+}
+
+std::string MonitoringView::ReadInput() {
+    return console_.ReadLine();
 }
